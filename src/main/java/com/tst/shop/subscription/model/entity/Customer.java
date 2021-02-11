@@ -16,7 +16,7 @@ public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long customerId;
     private String name;
     private String email;
     private String password;
@@ -24,8 +24,8 @@ public class Customer implements Serializable {
     private String address;
     private boolean active;
     private String role;
-    private Timestamp createdTimestamp;
-    private Timestamp updatedTimestamp;
+    //private Timestamp createdTimestamp;
+    //private Timestamp updatedTimestamp;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
     private List<Subscription> subscriptions;

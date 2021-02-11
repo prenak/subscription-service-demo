@@ -15,10 +15,11 @@ public class Subscription implements Serializable {
     private static final long serialVersionUID = 8879426420196312959L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long subscriptionId;
     private Timestamp startTimestamp;
     private Timestamp endTimestamp;
-    private Timestamp pausedTimestamp;
+    private Timestamp lastPausedTimestamp;
     private Boolean isActive = Boolean.TRUE;
     private Timestamp createdTimestamp;
     private Timestamp updatedTimestamp;

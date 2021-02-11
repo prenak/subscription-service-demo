@@ -17,11 +17,12 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer productId;
-    private String productName;
-    private String productDescription;
-    private BigDecimal productPrice;
-    private Integer productStatus;
-    private Integer durationInDays;
-    private Timestamp createdTimestamp;
-    private Timestamp updatedTimestamp;
+    private String name;
+    private String description;
+    private String trainingLevel;
+    private BigDecimal price;
+    private Boolean status = Boolean.TRUE;
+    private Integer durationInWeeks;
+    //private Timestamp createdTimestamp;
+    //private Timestamp updatedTimestamp;
 }
