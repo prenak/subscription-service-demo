@@ -1,5 +1,6 @@
 package com.tst.shop.subscription.service;
 
+import com.tst.shop.subscription.model.entity.Customer;
 import com.tst.shop.subscription.model.entity.Payment;
 import com.tst.shop.subscription.model.entity.Product;
 import com.tst.shop.subscription.model.entity.Subscription;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -31,20 +33,20 @@ public class SubscriptionService {
 
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Long createNewSubscription(Long customerId, Integer productId) throws Exception {
+    public Subscription createNewSubscription(String customerEmail, Integer productId, Date startDate) throws Exception {
         Subscription subscription = new Subscription();
-        subscription.setCustomer(customerService.findCustomerById(customerId));
+        subscription.setCustomer(customerService.findCustomerByEmail(customerEmail));
 
         Product product = productService.findProductById(productId);
         subscription.setProduct(product);
 
-        DateTime startDt = new DateTime();
-        Timestamp startTs = new Timestamp(startDt.getMillis());
-        subscription.setStartTimestamp(startTs);
-        subscription.setCreatedTimestamp(startTs);
-        subscription.setUpdatedTimestamp(startTs);
+        DateTime startDt = new DateTime(startDate);
+        subscription.setStartTimestamp(new Timestamp(startDt.getMillis()));
         DateTime endDt = startDt.plusWeeks(product.getDurationInWeeks());
         subscription.setEndTimestamp(new Timestamp(endDt.getMillis()));
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        subscription.setCreatedTimestamp(now);
+        subscription.setUpdatedTimestamp(now);
 
         Payment payment = new Payment();
         payment.setAmount(product.getPrice());
@@ -52,12 +54,12 @@ public class SubscriptionService {
         payment.setStatus(1);
         subscription.setPayment(paymentRepository.save(payment));
 
-        subscription = subscriptionRepository.save(subscription);
-        return subscription.getSubscriptionId();
+        return subscriptionRepository.save(subscription);
     }
 
 
-    public List<Subscription> fetchAllSubscriptionsForCustomer(Long customerId){
-        return null;
+    public List<Subscription> fetchAllSubscriptionsForCustomer(String customerEmail) throws Exception {
+        Customer customer = customerService.findCustomerByEmail(customerEmail);
+        return subscriptionRepository.findAllByCustomer_CustomerId(customer.getCustomerId());
     }
 }

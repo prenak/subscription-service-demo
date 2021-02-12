@@ -1,4 +1,4 @@
-package com.tst.shop.subscription.security;
+package com.tst.shop.subscription.config;
 
 import com.tst.shop.subscription.service.UserDetailsSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;

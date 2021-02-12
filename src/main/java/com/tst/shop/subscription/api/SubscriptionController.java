@@ -1,11 +1,14 @@
 package com.tst.shop.subscription.api;
 
 
+import com.tst.shop.subscription.model.dto.SubscriptionRequestDto;
+import com.tst.shop.subscription.model.dto.SubscriptionResponseDto;
 import com.tst.shop.subscription.model.entity.Customer;
 import com.tst.shop.subscription.model.entity.Subscription;
 import com.tst.shop.subscription.service.CustomerService;
 import com.tst.shop.subscription.service.SubscriptionService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -26,14 +30,17 @@ public class SubscriptionController {
     private SubscriptionService subscriptionService;
 
     @Autowired
-    private CustomerService customerService;
+    private ModelMapper modelMapper;
 
 
     @PostMapping("")
     @PreAuthorize("hasAnyRole('CUSTOMER')")
-    public Long subscribeToProduct(Principal principal){
-        try{
-            return subscriptionService.createNewSubscription(1L, 2);
+    public SubscriptionResponseDto subscribeToProduct(@RequestBody SubscriptionRequestDto subscriptionRequestDto, Principal principal) {
+        log.info("Received a request to create a new subscription: {} for customer {}", subscriptionRequestDto, principal.getName());
+        SubscriptionResponseDto subscriptionResponseDto = null;
+        try {
+            Subscription subscription = subscriptionService.createNewSubscription(principal.getName(), subscriptionRequestDto.getProductId(), subscriptionRequestDto.getStartTimestamp());
+            subscriptionResponseDto = modelMapper.map(subscription, SubscriptionResponseDto.class);
 
         } catch (Exception ex) {
             log.error("Exception - {}", ex.getMessage(), ex);
@@ -41,14 +48,19 @@ public class SubscriptionController {
             log.info("Returning ResponseStatusException: ", responseStatusException);
             throw responseStatusException;
         }
+        return subscriptionResponseDto;
     }
+
 
     @GetMapping("")
     @PreAuthorize("hasAnyRole('CUSTOMER')")
-    public List<Subscription> getSubscriptions(Authentication principal){
+    public List<SubscriptionResponseDto> getSubscriptions(Principal principal){
+        List<SubscriptionResponseDto> subscriptionResponseDtos = new ArrayList<>();
         try{
-            Customer c = customerService.findCustomerById(1L);
-            return c.getSubscriptions();
+            List<Subscription> subscriptions = subscriptionService.fetchAllSubscriptionsForCustomer(principal.getName());
+            subscriptions.forEach(subscription -> {
+                subscriptionResponseDtos.add(modelMapper.map(subscription, SubscriptionResponseDto.class));
+            });
 
         } catch (Exception ex) {
             log.error("Exception - {}", ex.getMessage(), ex);
@@ -56,5 +68,6 @@ public class SubscriptionController {
             log.info("Returning ResponseStatusException: ", responseStatusException);
             throw responseStatusException;
         }
+        return subscriptionResponseDtos;
     }
 }
