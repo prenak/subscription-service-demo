@@ -34,7 +34,7 @@ public class SubscriptionController {
 
 
     @PostMapping("")
-    @PreAuthorize("hasAnyRole('CUSTOMER')")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CUSTOMER_ON_TRAIL')")
     public SubscriptionResponseDto subscribeToProduct(@RequestBody SubscriptionRequestDto subscriptionRequestDto, Principal principal) {
         log.info("Received a request to create a new subscription: {} for customer {}", subscriptionRequestDto, principal.getName());
         SubscriptionResponseDto subscriptionResponseDto = null;
@@ -53,7 +53,7 @@ public class SubscriptionController {
 
 
     @GetMapping("")
-    @PreAuthorize("hasAnyRole('CUSTOMER')")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CUSTOMER_ON_TRAIL')")
     public List<SubscriptionResponseDto> getSubscriptions(Principal principal){
         List<SubscriptionResponseDto> subscriptionResponseDtos = new ArrayList<>();
         try{
@@ -69,5 +69,59 @@ public class SubscriptionController {
             throw responseStatusException;
         }
         return subscriptionResponseDtos;
+    }
+
+    @PatchMapping("/{subscriptionId}/pause")
+    @PreAuthorize("hasAnyRole('CUSTOMER')")
+    public SubscriptionResponseDto pauseSubscription(@PathVariable("subscriptionId") Long subscriptionId, Principal principal) {
+        log.info("Received a request to pause subscription: {} for customer {}", subscriptionId, principal.getName());
+        SubscriptionResponseDto subscriptionResponseDto = null;
+        try {
+            Subscription subscription = subscriptionService.pauseSubscriptionForCustomer(principal.getName(), subscriptionId);
+            subscriptionResponseDto = modelMapper.map(subscription, SubscriptionResponseDto.class);
+
+        } catch (Exception ex) {
+            log.error("Exception - {}", ex.getMessage(), ex);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+        }
+        return subscriptionResponseDto;
+    }
+
+
+    @PatchMapping("/{subscriptionId}/resume")
+    @PreAuthorize("hasAnyRole('CUSTOMER')")
+    public SubscriptionResponseDto resumeSubscription(@PathVariable("subscriptionId") Long subscriptionId, Principal principal) {
+        log.info("Received a request to resume subscription: {} for customer {}", subscriptionId, principal.getName());
+        SubscriptionResponseDto subscriptionResponseDto = null;
+        try {
+            Subscription subscription = subscriptionService.unPauseSubscriptionForCustomer(principal.getName(), subscriptionId);
+            subscriptionResponseDto = modelMapper.map(subscription, SubscriptionResponseDto.class);
+
+        } catch (Exception ex) {
+            log.error("Exception - {}", ex.getMessage(), ex);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+        }
+        return subscriptionResponseDto;
+    }
+
+
+    @DeleteMapping("/{subscriptionId}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CUSTOMER_ON_TRAIL')")
+    public boolean cancelSubscription(@PathVariable("subscriptionId") Long subscriptionId, Principal principal) {
+        log.info("Received a request to cancel subscription: {} for customer {}", subscriptionId, principal.getName());
+        try {
+            subscriptionService.cancelSubscriptionForCustomer(principal.getName(), subscriptionId);
+
+        } catch (Exception ex) {
+            log.error("Exception - {}", ex.getMessage(), ex);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+        }
+        return true;
     }
 }

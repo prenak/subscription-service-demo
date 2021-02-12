@@ -1,13 +1,18 @@
 package com.tst.shop.subscription.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
+@ToString(exclude = "vouchers")
+@EqualsAndHashCode(exclude = "vouchers")
 @Entity
 @Table(name = "product")
 public class Product implements Serializable {
@@ -23,6 +28,10 @@ public class Product implements Serializable {
     private BigDecimal price;
     private Boolean status = Boolean.TRUE;
     private Integer durationInWeeks;
+    private Integer accessType;
     //private Timestamp createdTimestamp;
     //private Timestamp updatedTimestamp;
+
+    @ManyToMany(mappedBy = "products")
+    private List<Voucher> vouchers;
 }

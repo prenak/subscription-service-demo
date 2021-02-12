@@ -10,7 +10,20 @@ INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status,
 INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (10, 'Full-Body Starter', 'A 4-Week Program Perfect for Beginners', 'Easy', 130.00, true, 4)
 
 
-INSERT INTO Customer (customerId, name, email, password, phone, address, active, role) VALUES (1, 'Donald Duck', 'donald@gmail.com', 'duck', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER')
-INSERT INTO Customer (customerId, name, email, password, phone, address, active, role) VALUES (2, 'Leonardo D', 'leo@gmail.com', 'caprio', '7866554422', '230, West road, Berlin', true, 'ROLE_USER')
-INSERT INTO Customer (customerId, name, email, password, phone, address, active, role) VALUES (3, 'Tom Cruise', 'tom@gmail.com', 'mission', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER')
-INSERT INTO Customer (customerId, name, email, password, phone, address, active, role) VALUES (4, 'Robin Goodman', 'robin@gmail.com', 'batman', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER')
+INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active, role) VALUES (1, 'Donald Duck', 'donald@gmail.com', 'duck', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER')
+INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active, role) VALUES (2, 'Leonardo D', 'leo@gmail.com', 'caprio', '7866554422', '230, West road, Berlin', true, 'ROLE_USER')
+INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active, role) VALUES (3, 'Tom Cruise', 'tom@gmail.com', 'mission', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER_ON_TRAIL')
+INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active, role) VALUES (4, 'Robin Goodman', 'robin@gmail.com', 'batman', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER')
+
+INSERT INTO VOUCHER (voucherId, name, description, percentageDiscount) VALUES (1, 'FLAT10', 'Flat 10% off', 10)
+INSERT INTO VOUCHER (voucherId, name, description, percentageDiscount) VALUES (2, 'NY25OFF', 'New year sale! 25% Off', 25)
+INSERT INTO VOUCHER (voucherId, name, description, percentageDiscount) VALUES (3, 'GET5D', '5% Discount, Hurry!', 5)
+
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (1, 1)
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (1, 2)
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (1, 3)
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (2, 4)
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (2, 5)
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (2, 6)
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (3, 7)
+INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (3, 8)

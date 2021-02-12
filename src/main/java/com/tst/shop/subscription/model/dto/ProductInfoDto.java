@@ -13,4 +13,5 @@ public class ProductInfoDto {
     private String trainingLevel;
     private BigDecimal price;
     private Integer durationInWeeks;
+    private Integer accessType;
 }

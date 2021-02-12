@@ -24,6 +24,7 @@ public class Subscription implements Serializable {
     private Timestamp endTimestamp;
     private Timestamp lastPausedTimestamp;
     private Boolean isActive = Boolean.TRUE;
+    private Boolean isCancelled = Boolean.FALSE;
     private Timestamp createdTimestamp;
     private Timestamp updatedTimestamp;
 
