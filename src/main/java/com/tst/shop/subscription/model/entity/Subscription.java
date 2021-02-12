@@ -1,6 +1,7 @@
 package com.tst.shop.subscription.model.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,6 +9,8 @@ import java.sql.Timestamp;
 
 
 @Data
+@ToString(exclude = {"customer","product","payment"})
+@EqualsAndHashCode(exclude = {"customer","product","payment"})
 @Entity
 @Table(name = "Subscription")
 public class Subscription implements Serializable {
@@ -15,7 +18,7 @@ public class Subscription implements Serializable {
     private static final long serialVersionUID = 8879426420196312959L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long subscriptionId;
     private Timestamp startTimestamp;
     private Timestamp endTimestamp;
@@ -24,12 +27,14 @@ public class Subscription implements Serializable {
     private Timestamp createdTimestamp;
     private Timestamp updatedTimestamp;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "customerId")
+    @JsonIgnoreProperties("subscriptions")
     private Customer customer;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Product product;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Payment payment;
 }

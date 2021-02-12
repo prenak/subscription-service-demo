@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 public class SubscriptionService {
@@ -53,5 +54,10 @@ public class SubscriptionService {
 
         subscription = subscriptionRepository.save(subscription);
         return subscription.getSubscriptionId();
+    }
+
+
+    public List<Subscription> fetchAllSubscriptionsForCustomer(Long customerId){
+        return null;
     }
 }

@@ -15,7 +15,7 @@ public class Payment implements Serializable {
     private static final long serialVersionUID = 4900730320776553310L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
     private BigDecimal amount;
     private String mode;

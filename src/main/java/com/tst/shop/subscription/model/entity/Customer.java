@@ -1,13 +1,16 @@
 package com.tst.shop.subscription.model.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(exclude = "subscriptions")
+@ToString(exclude = "subscriptions")
 @Entity
 @Table(name = "customer")
 public class Customer implements Serializable {
@@ -27,6 +30,7 @@ public class Customer implements Serializable {
     //private Timestamp createdTimestamp;
     //private Timestamp updatedTimestamp;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
-    private List<Subscription> subscriptions;
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("customer")
+    private List<Subscription> subscriptions = new ArrayList<>();
 }
