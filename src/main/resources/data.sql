@@ -1,13 +1,13 @@
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (1, 'Yoga Basics', 'Full-Body Yoga for Beginners', 'Easy', 400.00, true, 15)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (2, 'Get In Shape', 'A Mix of Cardio and Full-Body Toning', 'Medium', 367.00, true, 10)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (3, 'Pure Pilates', 'Holistic Training for Posture and Movement', 'Easy', 290.00, true, 8)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (4, 'Fat Burner', 'Fat-Burning Workouts to Get You Lean', 'Medium', 280.00, true, 6)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (5, 'Body Shape', 'Total-Body Toning', 'Medium', 310.00, true, 12)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (6, 'Six Pack', 'Core Strength Training for Sculpted Abs', 'Hard', 430.00, true, 12)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (7, 'Yoga Recover', 'Calming and Relaxing Restorative Yoga Flows', 'Easy', 180.00, true, 6)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (8, 'Full Body Circuit', 'Full-Body Dumbbell Circuit Training for Beginners', 'Easy', 384.00, true, 9)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (9, 'Mobility', 'Dynamic Stretches to Increase Flexibility and Mobility', 'Medium', 340.00, true, 7)
-INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks) VALUES (10, 'Full-Body Starter', 'A 4-Week Program Perfect for Beginners', 'Easy', 130.00, true, 4)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (1, 'Yoga Basics', 'Full-Body Yoga for Beginners', 'Easy', 400.00, true, 15, 1)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (2, 'Get In Shape', 'A Mix of Cardio and Full-Body Toning', 'Medium', 367.00, true, 10, 1)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (3, 'Pure Pilates', 'Holistic Training for Posture and Movement', 'Easy', 290.00, true, 8, 2)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (4, 'Fat Burner', 'Fat-Burning Workouts to Get You Lean', 'Medium', 280.00, true, 6, 2)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (5, 'Body Shape', 'Total-Body Toning', 'Medium', 310.00, true, 12, 2)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (6, 'Six Pack', 'Core Strength Training for Sculpted Abs', 'Hard', 430.00, true, 12, 2)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (7, 'Yoga Recover', 'Calming and Relaxing Restorative Yoga Flows', 'Easy', 180.00, true, 6, 2)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (8, 'Full Body Circuit', 'Full-Body Dumbbell Circuit Training for Beginners', 'Easy', 384.00, true, 9, 2)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (9, 'Mobility', 'Dynamic Stretches to Increase Flexibility and Mobility', 'Medium', 340.00, true, 7, 2)
+INSERT INTO PRODUCT (productId, name, description, trainingLevel, price, status, durationInWeeks, accessType)  VALUES (10, 'Full-Body Starter', 'A 4-Week Program Perfect for Beginners', 'Easy', 130.00, true, 4, 1)
 
 
 INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active, role) VALUES (1, 'Donald Duck', 'donald@gmail.com', 'duck', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER')
@@ -15,9 +15,11 @@ INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active,
 INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active, role) VALUES (3, 'Tom Cruise', 'tom@gmail.com', 'mission', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER_ON_TRAIL')
 INSERT INTO CUSTOMER (customerId, name, email, password, phone, address, active, role) VALUES (4, 'Robin Goodman', 'robin@gmail.com', 'batman', '7866554422', '230, West road, Berlin', true, 'ROLE_CUSTOMER')
 
-INSERT INTO VOUCHER (voucherId, name, description, percentageDiscount) VALUES (1, 'FLAT10', 'Flat 10% off', 10)
-INSERT INTO VOUCHER (voucherId, name, description, percentageDiscount) VALUES (2, 'NY25OFF', 'New year sale! 25% Off', 25)
-INSERT INTO VOUCHER (voucherId, name, description, percentageDiscount) VALUES (3, 'GET5D', '5% Discount, Hurry!', 5)
+
+INSERT INTO VOUCHER (voucherId, code, description, percentageDiscount, expiryTimestamp) VALUES (1, 'FLAT10', 'Flat 10% off', 10, '2021-02-14 11:59:59')
+INSERT INTO VOUCHER (voucherId, code, description, percentageDiscount, expiryTimestamp) VALUES (2, 'NY25OFF', 'New year sale! 25% Off', 25, '2021-02-28 11:59:59')
+INSERT INTO VOUCHER (voucherId, code, description, percentageDiscount, expiryTimestamp) VALUES (3, 'GET5D', '5% Discount, Hurry!', 5, '2021-01-28 12:00:00')
+
 
 INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (1, 1)
 INSERT INTO VOUCHER_PRODUCT (vouchers_voucherId, products_productId) VALUES (1, 2)

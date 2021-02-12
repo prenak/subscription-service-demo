@@ -1,9 +1,6 @@
 package com.tst.shop.subscription.service;
 
-import com.tst.shop.subscription.model.entity.Customer;
-import com.tst.shop.subscription.model.entity.Payment;
-import com.tst.shop.subscription.model.entity.Product;
-import com.tst.shop.subscription.model.entity.Subscription;
+import com.tst.shop.subscription.model.entity.*;
 import com.tst.shop.subscription.repository.PaymentRepository;
 import com.tst.shop.subscription.repository.SubscriptionRepository;
 import org.joda.time.DateTime;
@@ -12,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -34,12 +34,26 @@ public class SubscriptionService {
 
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Subscription createNewSubscription(String customerEmail, Integer productId, Date startDate) throws Exception {
+    public Subscription createNewSubscription(String customerEmail, Integer productId, Date startDate, String voucherCode) throws Exception {
         Subscription subscription = new Subscription();
-        subscription.setCustomer(customerService.findCustomerByEmail(customerEmail));
+        Customer customer = customerService.findCustomerByEmail(customerEmail);
+
+        if (checkIfSubscriptionAlreadyExists(customer.getCustomerId(), productId)) throw new Exception("Already subscribed for this product");
+
+        subscription.setCustomer(customer);
 
         Product product = productService.findProductById(productId);
         subscription.setProduct(product);
+
+        Short percentageDiscount = 0;
+        if (StringUtils.hasText(voucherCode)) {
+            Voucher voucher = product.getVouchers()
+                    .stream()
+                    .filter(v -> voucherCode.equalsIgnoreCase(v.getCode()))
+                    .findFirst().orElseThrow(() -> new Exception("Voucher is not applicable for this product"));
+
+            percentageDiscount = voucher.getPercentageDiscount();
+        }
 
         DateTime startDt = new DateTime(startDate);
         subscription.setStartTimestamp(new Timestamp(startDt.getMillis()));
@@ -50,9 +64,10 @@ public class SubscriptionService {
         subscription.setUpdatedTimestamp(now);
 
         Payment payment = new Payment();
-        payment.setAmount(product.getPrice());
+        BigDecimal originalPrice = product.getPrice();
+        BigDecimal amountToSubtract = originalPrice.multiply(new BigDecimal(percentageDiscount)).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+        payment.setAmount(originalPrice.subtract(amountToSubtract));
         payment.setMode("CC");
-        payment.setStatus(1);
         subscription.setPayment(paymentRepository.save(payment));
 
         return subscriptionRepository.save(subscription);
@@ -119,5 +134,9 @@ public class SubscriptionService {
         subscription.setUpdatedTimestamp(new Timestamp(System.currentTimeMillis()));
 
         return subscriptionRepository.save(subscription);
+    }
+
+    private boolean checkIfSubscriptionAlreadyExists(Long customerId, Integer productId) {
+        return subscriptionRepository.findByCustomer_CustomerIdAndProduct_ProductId(customerId, productId).isPresent();
     }
 }

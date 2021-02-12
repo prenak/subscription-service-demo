@@ -39,7 +39,8 @@ public class SubscriptionController {
         log.info("Received a request to create a new subscription: {} for customer {}", subscriptionRequestDto, principal.getName());
         SubscriptionResponseDto subscriptionResponseDto = null;
         try {
-            Subscription subscription = subscriptionService.createNewSubscription(principal.getName(), subscriptionRequestDto.getProductId(), subscriptionRequestDto.getStartTimestamp());
+            Subscription subscription = subscriptionService.createNewSubscription(principal.getName(), subscriptionRequestDto.getProductId(),
+                    subscriptionRequestDto.getStartTimestamp(), subscriptionRequestDto.getVoucherCode());
             subscriptionResponseDto = modelMapper.map(subscription, SubscriptionResponseDto.class);
 
         } catch (Exception ex) {

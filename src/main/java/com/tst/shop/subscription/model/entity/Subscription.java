@@ -25,6 +25,7 @@ public class Subscription implements Serializable {
     private Timestamp lastPausedTimestamp;
     private Boolean isActive = Boolean.TRUE;
     private Boolean isCancelled = Boolean.FALSE;
+    private String voucherCode;
     private Timestamp createdTimestamp;
     private Timestamp updatedTimestamp;
 

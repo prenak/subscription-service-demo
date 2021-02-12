@@ -19,7 +19,7 @@ public class Payment implements Serializable {
     private Long paymentId;
     private BigDecimal amount;
     private String mode;
-    private Integer status;
+    private Integer status = 1;
     //private Timestamp createdTimestamp;
     //private Timestamp updatedTimestamp;
 }

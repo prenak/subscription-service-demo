@@ -10,4 +10,5 @@ public class SubscriptionRequestDto {
     private String requestId;
     private Integer productId;
     private Date startTimestamp;
+    private String voucherCode;
 }

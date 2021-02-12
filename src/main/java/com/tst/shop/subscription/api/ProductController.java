@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -21,9 +23,9 @@ public class ProductController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.FOUND)
-    public List<Product> fetchAllProducts(){
+    public List<Product> fetchAllProducts(@PathParam("voucherCode") String voucherCode) {
         try{
-            return productService.findAllProducts();
+            return productService.findAllProducts(voucherCode);
 
         } catch (Exception ex){
             log.error("Exception - {}", ex.getMessage(), ex);

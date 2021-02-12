@@ -1,5 +1,6 @@
 package com.tst.shop.subscription.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -33,5 +34,6 @@ public class Product implements Serializable {
     //private Timestamp updatedTimestamp;
 
     @ManyToMany(mappedBy = "products")
+    @JsonIgnoreProperties("products")
     private List<Voucher> vouchers;
 }
