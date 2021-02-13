@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @ToString(exclude = {"customer","product","payment"})
 @EqualsAndHashCode(exclude = {"customer","product","payment"})
 @Entity
-@Table(name = "Subscription")
+@Table(name = "subscription")
 public class Subscription implements Serializable {
 
     private static final long serialVersionUID = 8879426420196312959L;

@@ -12,6 +12,7 @@ public class SubscriptionResponseDto {
     private Timestamp endTimestamp;
     private Timestamp lastPausedTimestamp;
     private Boolean isActive;
+    private Boolean isCancelled;
     private Timestamp createdTimestamp;
     private Timestamp updatedTimestamp;
     private ProductInfoDto product;

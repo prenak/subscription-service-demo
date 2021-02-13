@@ -27,6 +27,9 @@ public class SubscriptionService {
     private ProductService productService;
 
     @Autowired
+    private VoucherService voucherService;
+
+    @Autowired
     private SubscriptionRepository subscriptionRepository;
 
     @Autowired
@@ -47,6 +50,9 @@ public class SubscriptionService {
 
         Short percentageDiscount = 0;
         if (StringUtils.hasText(voucherCode)) {
+
+            if (!voucherService.isValidVoucher(voucherCode)) throw new Exception("Voucher is not valid");
+
             Voucher voucher = product.getVouchers()
                     .stream()
                     .filter(v -> voucherCode.equalsIgnoreCase(v.getCode()))
@@ -86,7 +92,7 @@ public class SubscriptionService {
         Subscription subscription = subscriptionRepository.findBySubscriptionIdAndCustomer_CustomerId(subscriptionId, customer.getCustomerId())
                 .orElseThrow(() -> new Exception("No such subscription available under this customer"));
 
-        if (subscription.getIsCancelled()) throw new Exception("Cannot resume a cancelled subscription");
+        if (subscription.getIsCancelled()) throw new Exception("Cannot pause a cancelled subscription");
         if (!subscription.getIsActive()) throw new Exception("Cannot pause an already paused subscription");
 
         Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -128,13 +134,14 @@ public class SubscriptionService {
         Subscription subscription = subscriptionRepository.findBySubscriptionIdAndCustomer_CustomerId(subscriptionId, customer.getCustomerId())
                 .orElseThrow(() -> new Exception("No such subscription available under this customer"));
 
-        if (subscription.getIsCancelled()) throw new Exception("Cannot resume a cancelled subscription");
+        if (subscription.getIsCancelled()) throw new Exception("Subscription is already cancelled");
 
         subscription.setIsCancelled(true);
         subscription.setUpdatedTimestamp(new Timestamp(System.currentTimeMillis()));
 
         return subscriptionRepository.save(subscription);
     }
+
 
     private boolean checkIfSubscriptionAlreadyExists(Long customerId, Integer productId) {
         return subscriptionRepository.findByCustomer_CustomerIdAndProduct_ProductId(customerId, productId).isPresent();
