@@ -11,11 +11,13 @@ services:
       MYSQL_USER: subsvc
       MYSQL_PASSWORD: subsvc
     container_name: subscription-mysql-db
+    restart: always
 
   subscription-service:
     build: .
     ports:
       - "8089:8089"
     container_name: subscription-service
+    restart: always
     depends_on:
       - subscription-mysql-db

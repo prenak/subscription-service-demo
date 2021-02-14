@@ -36,7 +36,7 @@ public class SubscriptionController {
 
 
 
-    @PostMapping("")
+    @PostMapping("/subscribe")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('CUSTOMER','CUSTOMER_ON_TRAIL')")
     public SubscriptionResponseDto subscribeToProduct(@RequestBody SubscriptionRequestDto subscriptionRequestDto, Principal principal) {
