@@ -1,19 +1,16 @@
 package com.tst.shop.subscription.api;
 
 
+import com.tst.shop.subscription.exception.SubscriptionServiceException;
 import com.tst.shop.subscription.model.dto.SubscriptionRequestDto;
 import com.tst.shop.subscription.model.dto.SubscriptionResponseDto;
-import com.tst.shop.subscription.model.entity.Customer;
 import com.tst.shop.subscription.model.entity.Subscription;
-import com.tst.shop.subscription.service.CustomerService;
 import com.tst.shop.subscription.service.SubscriptionService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,19 +18,26 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SubscriptionController
+ * - API to deal with all the subscription related functionalities
+ */
+
 @Slf4j
 @RestController
 @RequestMapping("/subscription")
 public class SubscriptionController {
 
     @Autowired
-    private SubscriptionService subscriptionService;
+    private ModelMapper modelMapper;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private SubscriptionService subscriptionService;
+
 
 
     @PostMapping("")
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('CUSTOMER','CUSTOMER_ON_TRAIL')")
     public SubscriptionResponseDto subscribeToProduct(@RequestBody SubscriptionRequestDto subscriptionRequestDto, Principal principal) {
         log.info("Received a request to create a new subscription: {} for customer {}", subscriptionRequestDto, principal.getName());
@@ -43,12 +47,25 @@ public class SubscriptionController {
                     subscriptionRequestDto.getStartTimestamp(), subscriptionRequestDto.getVoucherCode());
             subscriptionResponseDto = modelMapper.map(subscription, SubscriptionResponseDto.class);
 
+        } catch (IllegalArgumentException iae) {
+            log.error("IllegalArgumentException - {}", iae.getMessage(), iae);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, iae.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
+        } catch (SubscriptionServiceException sse) {
+            log.error("SubscriptionServiceException - {}", sse.getMessage(), sse);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, sse.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
         } catch (Exception ex) {
             log.error("Exception - {}", ex.getMessage(), ex);
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
             log.info("Returning ResponseStatusException: ", responseStatusException);
             throw responseStatusException;
         }
+        log.debug("Returning {}", subscriptionResponseDto);
         return subscriptionResponseDto;
     }
 
@@ -56,6 +73,7 @@ public class SubscriptionController {
     @GetMapping("")
     @PreAuthorize("hasAnyRole('CUSTOMER','CUSTOMER_ON_TRAIL')")
     public List<SubscriptionResponseDto> getSubscriptions(Principal principal){
+        log.info("Received a request to get subscriptions for customer {}", principal.getName());
         List<SubscriptionResponseDto> subscriptionResponseDtos = new ArrayList<>();
         try{
             List<Subscription> subscriptions = subscriptionService.fetchAllSubscriptionsForCustomer(principal.getName());
@@ -63,14 +81,22 @@ public class SubscriptionController {
                 subscriptionResponseDtos.add(modelMapper.map(subscription, SubscriptionResponseDto.class));
             });
 
+        } catch (SubscriptionServiceException sse) {
+            log.error("SubscriptionServiceException - {}", sse.getMessage(), sse);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, sse.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
         } catch (Exception ex) {
             log.error("Exception - {}", ex.getMessage(), ex);
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
             log.info("Returning ResponseStatusException: ", responseStatusException);
             throw responseStatusException;
         }
+        log.debug("Returning subscriptions: {}", subscriptionResponseDtos);
         return subscriptionResponseDtos;
     }
+
 
     @PatchMapping("/{subscriptionId}/pause")
     @PreAuthorize("hasAnyRole('CUSTOMER')")
@@ -81,12 +107,25 @@ public class SubscriptionController {
             Subscription subscription = subscriptionService.pauseSubscriptionForCustomer(principal.getName(), subscriptionId);
             subscriptionResponseDto = modelMapper.map(subscription, SubscriptionResponseDto.class);
 
+        } catch (IllegalArgumentException iae) {
+            log.error("IllegalArgumentException - {}", iae.getMessage(), iae);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, iae.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
+        } catch (SubscriptionServiceException sse) {
+            log.error("SubscriptionServiceException - {}", sse.getMessage(), sse);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, sse.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
         } catch (Exception ex) {
             log.error("Exception - {}", ex.getMessage(), ex);
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
             log.info("Returning ResponseStatusException: ", responseStatusException);
             throw responseStatusException;
         }
+        log.debug("Returning {}", subscriptionResponseDto);
         return subscriptionResponseDto;
     }
 
@@ -100,12 +139,25 @@ public class SubscriptionController {
             Subscription subscription = subscriptionService.unPauseSubscriptionForCustomer(principal.getName(), subscriptionId);
             subscriptionResponseDto = modelMapper.map(subscription, SubscriptionResponseDto.class);
 
+        } catch (IllegalArgumentException iae) {
+            log.error("IllegalArgumentException - {}", iae.getMessage(), iae);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, iae.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
+        } catch (SubscriptionServiceException sse) {
+            log.error("SubscriptionServiceException - {}", sse.getMessage(), sse);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, sse.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
         } catch (Exception ex) {
             log.error("Exception - {}", ex.getMessage(), ex);
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
             log.info("Returning ResponseStatusException: ", responseStatusException);
             throw responseStatusException;
         }
+        log.debug("Returning {}", subscriptionResponseDto);
         return subscriptionResponseDto;
     }
 
@@ -116,6 +168,18 @@ public class SubscriptionController {
         log.info("Received a request to cancel subscription: {} for customer {}", subscriptionId, principal.getName());
         try {
             subscriptionService.cancelSubscriptionForCustomer(principal.getName(), subscriptionId);
+
+        } catch (IllegalArgumentException iae) {
+            log.error("IllegalArgumentException - {}", iae.getMessage(), iae);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, iae.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
+
+        } catch (SubscriptionServiceException sse) {
+            log.error("SubscriptionServiceException - {}", sse.getMessage(), sse);
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, sse.getMessage());
+            log.info("Returning ResponseStatusException: ", responseStatusException);
+            throw responseStatusException;
 
         } catch (Exception ex) {
             log.error("Exception - {}", ex.getMessage(), ex);

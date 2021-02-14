@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(exclude = "subscriptions")
-@ToString(exclude = "subscriptions")
+@ToString(exclude = {"subscriptions", "password"})
 @Entity
 @Table(name = "customer")
 public class Customer implements Serializable {

@@ -21,11 +21,10 @@ public class UserDetailsSecurityService implements UserDetailsService {
         CustomerUserDetails customerUserDetails = new CustomerUserDetails();
         try{
             Customer customer = customerService.findCustomerByEmail(email);
-            log.info("Customer for security: {}", customer);
             customerUserDetails.setCustomer(customer);
 
         } catch (Exception e) {
-            throw new UsernameNotFoundException(String.format("%s not found", email));
+            throw new UsernameNotFoundException(String.format("%s not a valid customer", email));
         }
         return customerUserDetails;
     }
